@@ -1,0 +1,10 @@
+GET 200 31 7.169 ms Sat, 20 May 2023 11:09:42 GMT 1.1 /
+
+GET 200 43 2.300 ms Sat, 20 May 2023 11:09:42 GMT 1.1 /get-users
+
+POST 201 37 25.911 ms Sat, 20 May 2023 11:09:42 GMT 1.1 /add-user
+
+DELETE 200 43 1.392 ms Sat, 20 May 2023 11:09:42 GMT 1.1 /user/123
+
+PUT 201 43 1.706 ms Sat, 20 May 2023 11:09:42 GMT 1.1 /user/142
+
