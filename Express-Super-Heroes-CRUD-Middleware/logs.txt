@@ -1,0 +1,6 @@
+URL: /add/hero, Method: POST, Timestamp: Tue May 23 2023 21:14:34 GMT+0530 (India Standard Time)
+URL: /heroes, Method: GET, Timestamp: Tue May 23 2023 21:14:34 GMT+0530 (India Standard Time)
+URL: /update/villain/1?role=admin&pass=saveEarh, Method: PATCH, Timestamp: Tue May 23 2023 21:14:34 GMT+0530 (India Standard Time)
+URL: /update/villain/4?role=admin&pass=saveEarth, Method: PATCH, Timestamp: Tue May 23 2023 21:14:34 GMT+0530 (India Standard Time)
+URL: /delete/hero/1?role=admin&pass=saveEarh, Method: DELETE, Timestamp: Tue May 23 2023 21:14:34 GMT+0530 (India Standard Time)
+URL: /delete/hero/1?role=admin&pass=saveEarth, Method: DELETE, Timestamp: Tue May 23 2023 21:14:34 GMT+0530 (India Standard Time)
