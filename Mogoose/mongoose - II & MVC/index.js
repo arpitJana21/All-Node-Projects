@@ -14,7 +14,7 @@ app.listen(4500, async function () {
         console.log('Connected to the DB');
         console.log('Server Running on port : 4500');
     } catch (err) {
-        console.log(err.message);
-        console.log('Something Went Wrong X-X-X');
+        console.log('X-X-X Something Went Wrong');
+        console.error(`Error: ${err.message}`);
     }
 });
