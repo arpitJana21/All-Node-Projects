@@ -1,0 +1,9 @@
+Routes
+
+==> /users/register: Registering a new users
+==> /users/login: Authenticating the Registered users
+
+==> content/about: Info Route. (Yes)
+Authorized User
+==> content/movies: Streaming the movie. (No)
+==> content/series: Streaming the series. (No)
