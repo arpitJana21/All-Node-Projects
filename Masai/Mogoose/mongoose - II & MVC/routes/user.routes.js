@@ -68,4 +68,12 @@ userRouter.route('/delete/:userID').delete(async function (req, res) {
     }
 });
 
+/**
+DELETE /books/delete/:id <Restricted Route>
+A user has to be authenticated to access this route.
+A user should be able to delete any book whose id has been passed as param
+*/
+
+
+
 module.exports = {userRouter};
