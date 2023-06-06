@@ -6,8 +6,19 @@ const jwt = require('jsonwebtoken');
 const {blackList} = require('../blacklist.js');
 const {auth} = require('../middleware/auth.middleware.js');
 
-userRouter.get('/', function (req, res) {
-    return res.status(200).json({status: 'success', message: 'Welcome'});
+userRouter.get('/', async function (req, res) {
+    try {
+        const users = await UserModel.find(req.query);
+        return res.status(200).json({
+            status: 'success',
+            users : users
+        })
+    }catch(err){
+        return res.status(400).json({
+            status: 'fail',
+            Error: err.message
+        })
+    }
 });
 
 userRouter.post('/register', async function (req, res) {
