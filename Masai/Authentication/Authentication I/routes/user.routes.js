@@ -1,10 +1,10 @@
 const express = require('express');
 const {UserModel} = require('../model/users.model.js');
-const userRouter = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const {blackList} = require('../blacklist.js');
 const {auth} = require('../middleware/auth.middleware.js');
+const userRouter = express.Router();
 
 userRouter.get('/', async function (req, res) {
     try {
