@@ -2,19 +2,20 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const {UserModel} = require('../model/user.model.js');
+const {blackListModel} = require('../model/blacklist.model.js')
 const userRouter = express.Router();
 
 userRouter.post('/register', registerLogic);
 userRouter.post('/login', loginLogic);
-userRouter.get('/refreshToken', refreshTokenLogic);
+userRouter.get('/logout', logoutLogic);
 
 async function registerLogic(req, res) {
     try {
         const {name, email, pass} = req.body;
-        bcrypt.hash(pass, 5, function (err, hash) {
+        bcrypt.hash(pass, 5, async function (err, hash) {
             if (!err) {
                 const newUser = new UserModel({name, email, pass: hash});
-                newUser.save();
+                await newUser.save();
 
                 return res.status(200).json({
                     status: 'ok',
@@ -49,17 +50,13 @@ async function loginLogic(req, res) {
             }
 
             if (result) {
-                const aToken = jwt.sign({data: 'foobar'}, 'masaiA', {
+                const aToken = jwt.sign({userID: user._id, userName: user.name}, 'masaiA', {
                     expiresIn: '1h',
-                });
-                const rToken = jwt.sign({data: 'foobar'}, 'masaiR', {
-                    expiresIn: '28h',
                 });
                 return res.status(200).json({
                     status: 'ok',
                     message: 'Login Successfull',
                     accessToken: aToken,
-                    refreshToken: rToken,
                 });
             }
 
@@ -77,29 +74,22 @@ async function loginLogic(req, res) {
         });
     }
 }
-async function refreshTokenLogic(req, res) {
-    const rToken = req.headers.arthorization?.split(' ')[1];
-    jwt.verify(rToken, 'masaiR', function (err, decoded) {
-        if (err) {
-            return res.status(400).json({
-                status: 'fail',
-                error: err.message,
-            });
-        }
-        if (decoded) {
-            const aToken = jwt.sign({data: 'foobar'}, 'masaiA', {
-                expiresIn: '1h',
-            });
-            const rToken = jwt.sign({data: 'foobar'}, 'masaiR', {
-                expiresIn: '28h',
-            });
-            return res.status(200).json({
-                status: 'ok',
-                accessToken: aToken,
-                refreshToken: rToken,
-            });
-        }
-    });
+async function logoutLogic(req, res){
+    const token = req.headers.authorization?.split(' ')[1];
+    try {
+        if (!token) throw new Error('Token not found !');
+        const newToken = await new blackListModel({token});
+        newToken.save();
+        return res.status(200).json({
+            status: 'ok',
+            message: 'Logout Successfull',
+        });
+    } catch (error) {
+        return res.status(400).json({
+            status: 'fail',
+            error: error.message,
+        });
+    }
 }
 
 module.exports = {userRouter};

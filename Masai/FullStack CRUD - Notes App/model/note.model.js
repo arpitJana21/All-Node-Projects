@@ -10,7 +10,11 @@ const noteSchema = mongoose.Schema(
             type: String,
             required: true,
         },
-        user: {
+        userID: {
+            type: String,
+            required: true,
+        },
+        userName: {
             type: String,
             required: true,
         },
