@@ -46,7 +46,7 @@ async function updateNoteLogic(req, res) {
         const note = await NoteModel.findOne({_id: noteID});
         if (note.userID !== req.body.userID)
             throw new Error('Unauthorized User');
-        await NoteModel.findByIdAndUpdate({_id: noteID}, req.body.note);
+        await NoteModel.findByIdAndUpdate({_id: noteID}, req.body);
         const updatedNote = await NoteModel.findOne({_id: noteID});
         return res.status(200).json({
             status: 'ok',
