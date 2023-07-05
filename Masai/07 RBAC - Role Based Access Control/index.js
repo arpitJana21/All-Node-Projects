@@ -1,23 +1,18 @@
 const express = require('express');
 const {connection} = require('./db.js');
 const {userRouter} = require('./routes/user.routes.js');
-const {noteRouter} = require('./routes/note.routes.js');
+const {blogRouter} = require('./routes/blog.routes.js')
+
 require('dotenv').config();
 
 const app = express();
-app.use(express.json());
 
+app.use(express.json());
 app.use('/users', userRouter);
-app.use('/notes', noteRouter);
+app.use('/blogs', blogRouter);
 
 app.listen(process.env.port, async function () {
-    try {
-        console.log('Please Wait. Server is in process...');
-        await connection;
-        console.log(':) Server is ready to use.');
-        console.log(`Running on -> localhost:${process.env.port}/`);
-    } catch (err) {
-        console.log('Something Wrong !!');
-        console.log(`Error: ${err.message}`);
-    }
+    console.log('Server in process...')
+    await connection;
+    console.log(`server is running on http://localhost:${process.env.port}`);
 });

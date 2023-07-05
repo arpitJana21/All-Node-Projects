@@ -1,26 +1,20 @@
-const jwt = require('jsonwebtoken');
+const {blacklistModel} = require('../model/blacklist.model.js');
 const {UserModel} = require('../model/user.model.js');
-const {blackListModel} = require('../model/blacklist.model.js');
-const auth = async function (req, res, next) {
-    const token = req.headers.authorization?.split(' ')[1];
-    const exist = await blackListModel.findOne({token});
-    try {
-        if (!token) throw new Error('Provide the token Please');
-        if (exist) throw new Error('Please Login !');
-        jwt.verify(token, 'masaiA', async function (err, decoded) {
-            if (err) {
-                return res.status(400).json({
-                    status: 'fail',
-                    error: err.message,
-                });
-            }
+const jwt = require('jsonwebtoken');
 
-            if (decoded) {
+const auth = async function (req, res, next) {
+    try {
+        const token = req.headers.authorization?.split(' ')[1];
+        const blackListed = await blacklistModel.findOne({token});
+        if (blackListed) throw new Error('Please Login');
+        jwt.verify(token, 'masaiA', async function (err, decoded) {
+            if (err) throw new Error(err.message);
+            if (!decoded) throw new Error('Invalid Token');
+            else {
+                const user = await UserModel.findOne({_id: decoded.userID});
+                req.body.userName = user.name;
                 req.body.userID = decoded.userID;
-                req.body.userName = decoded.userName;
-                const user = await UserModel.findOne({_id: req.body.userID});
-                const role = user?.role;
-                req.body.role = role;
+                req.body.role = user.role;
                 next();
             }
         });
@@ -32,4 +26,4 @@ const auth = async function (req, res, next) {
     }
 };
 
-module.exports = {auth};
+module.exports = {auth}
