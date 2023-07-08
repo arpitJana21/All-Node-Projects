@@ -1,12 +1,18 @@
 const {blacklistModel} = require('../model/blacklist.model.js');
 const {UserModel} = require('../model/user.model.js');
+const {redis} = require('../redis.js');
 const jwt = require('jsonwebtoken');
 
 const auth = async function (req, res, next) {
     try {
         const token = req.headers.authorization?.split(' ')[1];
-        const blackListed = await blacklistModel.findOne({token});
-        if (blackListed) throw new Error('Please Login');
+
+        // const blackListed = await blacklistModel.findOne({token});
+        // if (blackListed) throw new Error('Please Login');
+
+        const blackListed = await redis.exists(token);
+        if(blackListed) throw new Error('Please Login');
+
         jwt.verify(token, 'masaiA', async function (err, decoded) {
             if (err) throw new Error(err.message);
             if (!decoded) throw new Error('Invalid Token');

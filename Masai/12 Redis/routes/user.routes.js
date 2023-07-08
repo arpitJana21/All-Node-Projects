@@ -1,9 +1,11 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const {blacklistModel} = require('../model/blacklist.model');
-const {UserModel} = require('../model/user.model');
+const {blacklistModel} = require('../model/blacklist.model.js');
+const {UserModel} = require('../model/user.model.js');
+const {redis} = require('../redis.js');
 const userRouter = express.Router();
+
 
 userRouter.post('/register', registerLogic);
 userRouter.post('/login', loginLogic);
@@ -36,20 +38,24 @@ async function loginLogic(req, res) {
         const {email, pass} = req.body;
         const user = await UserModel.findOne({email});
         if (!user) throw new Error('Use not found');
-        bcrypt.compare(pass, user.pass, function (err, result) {
+        bcrypt.compare(pass, user.pass, async function (err, result) {
             if (err) throw new Error(err.message);
             if (!result) throw new Error('Wrong Password');
             if (result) {
                 const aToken = jwt.sign(
                     {userID: user._id, userName: user.name},
                     'masaiA',
-                    {expiresIn: `${100 * 60 * 1000}`}
+                    {expiresIn: `${10 * 60 * 1000}`}
                 );
                 const rToken = jwt.sign(
                     {userID: user._id, userName: user.name},
                     'masaiR',
-                    {expiresIn: `${300 * 60 * 1000}`}
+                    {expiresIn: `${30 * 60 * 1000}`}
                 );
+
+                // await redis.set('aToken', aToken, 'EX', 10*60);
+                // await redis.set('rToken', rToken, 'EX', 30*60);
+
                 res.status(200).json({
                     status: 'ok',
                     message: 'Login Successful',
@@ -71,7 +77,7 @@ async function refreshTokenLogic(req, res) {
 
     try {
         if (!rToken) throw new Error('Token not found');
-        jwt.verify(rToken, 'masaiR', function (err, decoded) {
+        jwt.verify(rToken, 'masaiR', async function (err, decoded) {
             if(err) throw new Error(err.message)
             if (!decoded) throw new Error('Invalid Token');
             else {
@@ -86,6 +92,10 @@ async function refreshTokenLogic(req, res) {
                     'masaiR',
                     {expiresIn: `${3 * 60 * 1000}`}
                 )
+
+                // await redis.set('aToken', aToken, 'EX', 10*60);
+                // await redis.set('rToken', rToken, 'EX', 30*60);
+
                 return res.status(200).json({
                     status: 'ok',
                     aToken: aToken,
@@ -105,8 +115,12 @@ async function logoutLogic(req, res) {
     try {
         const token = req.headers.authorization?.split(' ')[1];
         if (!token) throw new Error('Token not found');
-        const newBlackListToken = await new blacklistModel({token});
-        newBlackListToken.save();
+        
+        // const newBlackListToken = await new blacklistModel({token});
+        // newBlackListToken.save();
+
+        await redis.set(token, 'true');
+
         return res.status(400).json({
             status: 'ok',
             message: 'Log Out successful',
