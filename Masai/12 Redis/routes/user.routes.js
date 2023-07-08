@@ -6,7 +6,6 @@ const {UserModel} = require('../model/user.model.js');
 const {redis} = require('../redis.js');
 const userRouter = express.Router();
 
-
 userRouter.post('/register', registerLogic);
 userRouter.post('/login', loginLogic);
 userRouter.get('/refreshToken', refreshTokenLogic);
@@ -78,7 +77,7 @@ async function refreshTokenLogic(req, res) {
     try {
         if (!rToken) throw new Error('Token not found');
         jwt.verify(rToken, 'masaiR', async function (err, decoded) {
-            if(err) throw new Error(err.message)
+            if (err) throw new Error(err.message);
             if (!decoded) throw new Error('Invalid Token');
             else {
                 const aToken = jwt.sign(
@@ -91,7 +90,7 @@ async function refreshTokenLogic(req, res) {
                     {userID: decoded.userID, userName: decoded.userName},
                     'masaiR',
                     {expiresIn: `${3 * 60 * 1000}`}
-                )
+                );
 
                 // await redis.set('aToken', aToken, 'EX', 10*60);
                 // await redis.set('rToken', rToken, 'EX', 30*60);
@@ -99,7 +98,7 @@ async function refreshTokenLogic(req, res) {
                 return res.status(200).json({
                     status: 'ok',
                     aToken: aToken,
-                    rToken: rToken
+                    rToken: rToken,
                 });
             }
         });
@@ -115,7 +114,7 @@ async function logoutLogic(req, res) {
     try {
         const token = req.headers.authorization?.split(' ')[1];
         if (!token) throw new Error('Token not found');
-        
+
         // const newBlackListToken = await new blacklistModel({token});
         // newBlackListToken.save();
 

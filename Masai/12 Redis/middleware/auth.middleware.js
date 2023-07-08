@@ -11,7 +11,7 @@ const auth = async function (req, res, next) {
         // if (blackListed) throw new Error('Please Login');
 
         const blackListed = await redis.exists(token);
-        if(blackListed) throw new Error('Please Login');
+        if (blackListed) throw new Error('Please Login');
 
         jwt.verify(token, 'masaiA', async function (err, decoded) {
             if (err) throw new Error(err.message);
@@ -32,4 +32,4 @@ const auth = async function (req, res, next) {
     }
 };
 
-module.exports = {auth}
+module.exports = {auth};
