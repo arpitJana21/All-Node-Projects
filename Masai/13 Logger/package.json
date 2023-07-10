@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-winston": "^4.2.0",
+    "winston": "^3.9.0"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "name": "13-logger",
+  "version": "1.0.0",
+  "main": "server.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
