@@ -26,7 +26,7 @@ describe('Testing APIs', function () {
         it('should GET the user by the ID', function (done) {
             const userID = 6;
             chai.request(server)
-                .get(`/user/${userID}`)
+                .get(`/users/${userID}`)
                 .end(function (err, response) {
                     response.should.have.status(200);
                     response.body.should.be.a("object");
