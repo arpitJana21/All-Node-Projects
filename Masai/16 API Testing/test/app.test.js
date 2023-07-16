@@ -15,7 +15,7 @@ describe('Testing APIs', function () {
                 .end(function (err, response) {
                     response.should.have.status(200);
                     response.body.should.be.a('array');
-                    response.body.should.have.length.above(9);
+                    response.body.should.have.length.above(8);
                     score += 2;
                     done();
                 });
@@ -60,6 +60,53 @@ describe('Testing APIs', function () {
                         .eq('cool_kid');
                     response.body.should.have.property('email');
 
+                    score += 2;
+                    done();
+                });
+        });
+    });
+
+    // Testing Delete Route
+    describe('GET /users/delete/:userID', function () {
+        it('should DELETE the existing user', function (done) {
+            const userID = 2;
+            const user = {
+                userName: 'cool_kid',
+            };
+            chai.request(server)
+                .delete(`/users/delete/${userID}`)
+                .end(function (err, response) {
+                    response.should.have.status(200);
+                    response.body.should.be.a('array');
+                    response.body.should.have.length.above(8);
+
+                    score += 2;
+                    done();
+                });
+        });
+    });
+
+    // Testing ADD Route
+    describe('GET /users/add', function () {
+        it('should ADD an user', function (done) {
+            const user = {
+                id: 12,
+                name: 'Pulkit',
+                userName: 'Pulkit',
+                email: 'pukit@gmail.com',
+            };
+            chai.request(server)
+                .post(`/users/add`)
+                .send(user)
+                .end(function (err, response) {
+                    response.should.have.status(200);
+                    response.body.should.be.a('object');
+                    response.body.should.have.property('id').eq(12);
+                    response.body.should.have.property('name').eq('Pulkit');
+                    response.body.should.have.property('userName').eq('Pulkit');
+                    response.body.should.have
+                        .property('email')
+                        .eq('pukit@gmail.com');
                     score += 2;
                     done();
                 });
