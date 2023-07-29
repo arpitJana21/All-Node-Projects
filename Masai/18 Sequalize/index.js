@@ -1,6 +1,7 @@
 const express = require('express');
-const {User} = require('./Schema/users.js');
 const {sequelize} = require('./Schema/index.js');
+const {User} = require('./Schema/users.js');
+const {Post} = require('./Schema/posts.js');
 
 const app = express();
 app.use(express.json());
@@ -45,6 +46,28 @@ app.delete('/users/:id', async function (req, res) {
     return res.status(200).json({
         isError: false,
         message: 'User deleted successfully',
+    });
+});
+
+app.post('/posts', async (req, res) => {
+    const data = await Post.create({
+        ...req.body,
+    });
+    res.status(200).json({
+        isError: false,
+        data,
+    });
+});
+
+app.get('/posts', async (req, res) => {
+    User.hasMany(Post, {foreignKey: 'userID'});
+    Post.belongsTo(User, {foreignKey: 'userID'});
+    const data = await Post.findAll({
+        include: [User],
+    });
+    res.status(200).json({
+        isError: false,
+        data,
     });
 });
 
