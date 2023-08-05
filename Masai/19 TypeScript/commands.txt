@@ -1,3 +1,8 @@
-1. npx tsc --init >> Create Typescript Project
-2. npx tsc <Filename> >> Converts the TS to JS Once
-3. npx tsc <Filename>.ts --watch >> Live Converts the File from TS to JS
+1. npx tsc --init 
+>> Create Typescript Project
+
+2. npx tsc <Filename> 
+>> Converts the TS to JS Once
+
+3. npx tsc <Filename>.ts --watch 
+>> Live Converts the File from TS to JS
