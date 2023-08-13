@@ -1,12 +1,4 @@
-import React, {useState} from 'react';
-
-function From2() {
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        password: '',
-    });
-
+function From2({formData, setFormData}) {
     const submit = (e) => {
         e.preventDefault();
         console.log(formData.name, formData.email, formData.password);
